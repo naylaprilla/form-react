@@ -120,6 +120,7 @@ Como a gente faz isso? Como eu falei, na parte de classes, a gente tinha o nosso
 
 A uma função, não é superintuitivo fazer isso. Numa função, eu normalmente executo ela, ela me devolve o resultado, e ela não guarda nenhum estado interno. Então, como a gente faz isso aqui no react?
 
+
 No react, para a gente conseguir guardar estado, já que é uma função primária do react a gente ter esse estado, e ele forçar uma renderização naquele componente, foram criados os hooks.
 
 Para utilizar os hooks primeiro é necessário importa-los.
@@ -158,7 +159,96 @@ A solução para isso é: const [nome, setNome] = useState("Nayla")
 
 ## Formulários Controlados - assincronicidade e validação
 
-    
+Dessa forma definimos o useState de nome e sobrenome e adicionamos os onChange para adicionar as valizações de cada componente.
+Mas uma vez digitados os valores nos inputs e enviados, eles não podem mais ser apagados, onde está o erro? Provavelmente na validação. O que acontece é que o set do useState é uma função assincrona, assim sendo, o valor ainda não foi atribuido quando a
+função atribui um novo valor para a variável.
+Ex.:     onChange={(event) => {
+                        setNome(event.target.value) 
+                        //dispara função assincrona que atribui o valor do setNome para o valor do  evento
+                    if( nome.length >= 3 ) { //quando ele passa aqui o setNome ainda não foi executado, não está com o novo valor
+                        setNome(nome.substr(0, 3)) 
+                        // aqui chama novamente o setNome, mas os primeiro setNome já esta na fila de execussão, então o que acontece é que , primeiro ele vai passar um valor vazio, depois vai sobreescrever o valor do estado com o valor que estava guardado na variavel nome.
+                    }
+
+Uma forma de corrigir isso é: 
+        onChange={(event) => {
+            let temporaryNome = event.target.value // salva o valor do evento dentro de uma variável temporária
+                if( temporaryNome.length >= 3 ) { // faz a validação da variável temporária,
+                    temporaryNome = temporaryNome.substr(0, 3) // se a validação for true então vou atribuir ela mesma
+                }}}
+                setNome(temporaryNome) // uma unica chamada do setNome já com o valor correto
+
+### Regras do hooks:
+    - Use apenas nos níveis superiores - Não use dentro de loops, regras condicionais ou funções aninhadas. Para que não haja mais de uma fonte de verdade.
+    ex.: if, for, while 
+
+    - Os hooks só podem ser usados dentro de funções do react. O que torna uma função, uma função do react são duas coisas:
+       1. Funções que tenham no retorno uma árvore de renderização. 
+       2. Precisa obrigatóriamente começar com letra maiuscula.
+
+Agora que aprendemos como os hooks funcionam podemos seguir com as validações do nosso formulário.
+
+Precisamos fazer os states dos outros elementos. Em promoções e novidades o useState recebe o valor inicial "true", para já aparecer marcado. E nos FormControlLabel dentro do Switch em defaultChecked={promoções} ou defaultChecked={novidade} cada um para seus respectivos elementos. Também o  onChange={(event) =>  setPromocoes(event.target.checked)} Também preciso substituir o defaultChecked={algumaCoisa}  por checked={algumaCoisa} junto com o onChange ele vai fazer essa validação.
+
+Adiciono value={algumaCoisa} onChange={(event) => setalgumaCoisa(event.target.value)} para cada um dos inputs. 
+
+Criamos dentro de App.js uma função chamada onSubmitForm que recebe como parâmetro dados e foi usada no componente <FormularioCadastro onSubmit={onSubmitForm}/> para que essa lógica seja reutilizável.
+
+## Desconstruindo as props da função
+
+Exemplo:
+
+Normal:
+function FormularioCadastro(props) {
+    ...
+} 
+
+Desconstruida: 
+function FormularioCadastro({onSubmit}) {
+    ...
+} 
+
+Desconstruimos as props para tornar o código menos repetitivo e mais legível, pois assim, não é necessario escrever 
+props.algumaCoisa. Outro ponto positivo é de pegar somente o parâmetro que precisamos dentro do objeto. 
+Interessante dizer que também é possível usar essa mesma técnica com arrays.
+
+## Erros e Validação do CPF
+
+TextField e Helpertext
+
+Criamos um state para erros para com um objeto: const [erros, setErros] = useState({cpf:{valido:true, texto:""}}) 
+No TextField de cpf:
+                onBlur={(event) =>{
+                    setErros({cpf:{valido:false, texto:"O CPF deve ter 11 dígitos." }})
+                }
+
+Em App.js criamos a função validarCPF com argumento cpf depois chamamos ela no componente:
+    <FormularioCadastro onSubmit={onSubmitForm} validarCPF={validarCPF}/>
+
+Agora em FormularioCadastro.jsx colocamos junto nos argumentos da função, um objeto desconstruido chamando validarCPF, desta forma:
+   function FormularioCadastro({onSubmit, validarCPF}) {
+    ...
+   }
+
+Então, pegamos a função validarCPF e usamos no onBlur da seguinte forma:
+    onBlur={(event) =>{
+                    const ehValido = validarCPF(event.target.value)
+                    setErros({cpf:ehValido})
+                }
+
+Deixando a função de validação fora do formulário, podemos alterar as validações dependendo da parte do projeto que estamos trabalhando o que torna esse componente mais reutilizável, recebendo a função de validação por propriedades conseguimos fazer com que nosso formulário seja mais flexível.
+
+
+
+ 
+
+
+
+
+
+
+
+
 
 
 
