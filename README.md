@@ -1,8 +1,8 @@
-# Projeto 
+# Projeto de um Formulário usando React
 
-## Step by step
+Iniciamos o projeto usando cra(npx create react app)
 
-No curso anterior, vimos os componentes criados como classes, ou class components
+No curso anterior de react, aprendemos sobre os componentes criados como classes, ou class components
 ex.:    class App extends Component {
 
             render() {
