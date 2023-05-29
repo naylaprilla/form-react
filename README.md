@@ -77,6 +77,83 @@ Vamos deixar o projeto mais consistente, mudando o título de h1 para o componen
                 </Typography>
 
 A parte visual está pronta, agora vamos trabalhar na funcionalidade dos componentes.
+
+## Formulários não controlados
+
+ Uma função não deve guardar estados, funções só existem para executar uma tarefa e quando ela termina essa tarefa, ela morre.
+ Por isso, é errado escrever dessa forma: 
+    ex.:     let nome = "" // nessa variável é onde o estado está sendo guardado dentro da função
+                return (
+                    <form>
+                        <TextField 
+                            onChange={(event) => {
+                                nome = event.target.value 
+                                /*Aqui a variável nome está recebendo o evento(digitado), o alvo desse evento que é cada letra, e o valor que é a cada letra digitada o evento se torna o anterior mais a letra atual, no console fica assim:
+                                a
+                                as
+                                asd
+                                asdf*/
+                                console.log(nome)
+                            }}...
+
+event.preventDefault: Impede que a pagina seja recarregada quando o formulário é submetido. Esse comportamento é o padrão para formulários. 
+
+A desvantagem de um formulario não controlado é que qualquer coisa digitada vai ser tratada como valida. Por isso é necessário tratar os dados recebidos.
+
+Exemplo de uma função de validação: //O usuário pode digitar no máximo três letras
+    onChange={(event) => {
+        nome= event.target.value
+        if(nome.length >3 ){
+            nome = nome.substr(0,3)
+        }
+    }}
+
+Quando atribuimos um valor o input é automaticamente bloqueado
+Por isso se colocarmos um atributo value={nome} não será possível digitar nada no input
+
+## useState
+Se funções não têm atributos, porque elas não são classes, e funções não deveriam guardar estado, como a gente faz para usar o estado, ou para guardar um estado aqui na nossa função do react?
+
+Então, a gente tem que vir agora no nosso componente, no nosso function component, nosso formulário de cadastro, e pedir para ele usar um estado. Eu quero que ele guarde, eu quero fazer uma função, guardar uma informação, e ele manter esse estado na memória do computador. Ele manter esse estado durante o ciclo de vida de um componente do react.
+
+Como a gente faz isso? Como eu falei, na parte de classes, a gente tinha o nosso atributo state. Que é muito natural, e isso é para classe, porque uma classe ela tem, naturalmente, um ciclo de vida próprio, a [...] do estado, naturalmente. Ela tem, ela dura mais de um ciclo de renderização, e assim por diante.
+
+A uma função, não é superintuitivo fazer isso. Numa função, eu normalmente executo ela, ela me devolve o resultado, e ela não guarda nenhum estado interno. Então, como a gente faz isso aqui no react?
+
+No react, para a gente conseguir guardar estado, já que é uma função primária do react a gente ter esse estado, e ele forçar uma renderização naquele componente, foram criados os hooks.
+
+Para utilizar os hooks primeiro é necessário importa-los.
+
+Mudar o estado dessa forma nome= event.target.value não é a melhor forma de se fazer isso, e não é recomendado.
+A solução para isso é: const [nome, setNome] = useState("Nayla")
+    dessa forma ela me devolveu um array, e esse array tem dois elementos. 
+     O primeiro, no índice um desse array, vai ser minha variável que representa aquele estado
+     O segundo elemento, vai ser a função que eu quero que ele use para ajustar aquele estado, para configurar ou atribuir um novo estado àquela variável.(setAlgumaCoisa)
+     Recebe o useState, e o valor entre parênteses é o valor inicial
+     o setNome será usado dessa forma na função:
+      onChange={(event) => {
+                    setNome(event.target.value)
+                    if( nome.length > 3 ) {
+                        setNome(nome.substr(0, 3))
+                    }
+    Então, dessa maneira, eu estou pedindo para usar o estado, e esse estado vai ser gerenciado pelo react, internamente. É uma maneira que eles acharam para ter um estado fixo dentro de funções, que não é uma coisa natural.
+
+
+## Formulários Controlados
+
+    PERGUNTA: Ao utilizamos o hook de useState indicamos para o React que aquele componente quer guardar estado. Para isso são devolvidas duas informações, a primeira é a referência para o valor do estado atual e a segunda é a função que altera esse estado.
+    Por que precisamos dessa separação?
+
+    RESPOSTA: Precisamos dessa separação para que o React consiga fazer o gerenciamento do componente e chamar o o ciclo de renderização quando o estado for alterado. Exatamente! Com essa separação o React consegue fazer a sincronização entre as alterações de estado e o ciclo de vida do componente.
+    Por isso que nunca devemos fazer a alteração do estado diretamente.
+
+
+
+
+
+
+
+
     
 
 
