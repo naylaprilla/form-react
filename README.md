@@ -138,14 +138,29 @@ A solução para isso é: const [nome, setNome] = useState("Nayla")
                     }
     Então, dessa maneira, eu estou pedindo para usar o estado, e esse estado vai ser gerenciado pelo react, internamente. É uma maneira que eles acharam para ter um estado fixo dentro de funções, que não é uma coisa natural.
 
+    Formas de escrever o useState:
 
-## Formulários Controlados
+        const arr = useState("")
+        const sobrenome = arr[0]
+        const setSobrenome = arr[1]
+
+    é o mesmo que escrever:
+
+        const [sobrenome, setSobrenome] = useState("") 
+
+    ambos funcionam mas o segundo é mais fácil de entender e menos código para escrever. 
 
     PERGUNTA: Ao utilizamos o hook de useState indicamos para o React que aquele componente quer guardar estado. Para isso são devolvidas duas informações, a primeira é a referência para o valor do estado atual e a segunda é a função que altera esse estado.
     Por que precisamos dessa separação?
 
     RESPOSTA: Precisamos dessa separação para que o React consiga fazer o gerenciamento do componente e chamar o o ciclo de renderização quando o estado for alterado. Exatamente! Com essa separação o React consegue fazer a sincronização entre as alterações de estado e o ciclo de vida do componente.
     Por isso que nunca devemos fazer a alteração do estado diretamente.
+
+## Formulários Controlados - assincronicidade e validação
+
+    
+
+
 
 
 
